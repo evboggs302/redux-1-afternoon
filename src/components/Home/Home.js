@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import RecipeCard from "./../RecipeCard/RecipeCard";
 import "./Home.css";
 
+import store from "../../store";
+
 class Home extends Component {
   constructor(props) {
     super(props);
+    const reduxState = store.getState();
     this.state = {
-      recipes: []
+      recipes: reduxState.recipe
     };
   }
 

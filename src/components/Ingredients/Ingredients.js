@@ -1,14 +1,25 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import store, { UPDATE_INGREDS } from "../../store";
 
 class Ingredients extends Component {
   constructor(props) {
     super(props);
+    const reduxState = store.getState();
     this.state = {
-      ingredients: [],
+      ingredients: reduxState.ingreds,
       input: ""
     };
   }
+  componentDidMount() {
+    store.subscribe(() => {
+      const reduxState = store.getState();
+      this.setState({
+        ingredients: reduxState.ingreds
+      });
+    });
+  }
+
   handleChange(val) {
     this.setState({
       input: val
@@ -16,6 +27,7 @@ class Ingredients extends Component {
   }
   addIngredient() {
     // Send data to Redux state
+    store.dispatch({ type: UPDATE_INGREDS, payload: this.state.input });
     this.setState({
       input: ""
     });
@@ -28,17 +40,14 @@ class Ingredients extends Component {
       <div className="List forms">
         <h2>Ingredients:</h2>
         <div className="form_items_container">
-          <ul className='list'>{ingredients}</ul>
+          <ul className="list">{ingredients}</ul>
         </div>
         <div className="add_container">
           <input
             value={this.state.input}
             onChange={e => this.handleChange(e.target.value)}
           />
-          <button
-            className="add_button"
-            onClick={() => this.addIngredient()}
-          >
+          <button className="add_button" onClick={() => this.addIngredient()}>
             Add Ingredient
           </button>
         </div>
